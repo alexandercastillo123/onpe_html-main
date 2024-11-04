@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html> 
+<!DOCTYPE html> 
 <html>
   <head>
     <title>ONPE - Oficina Nacional de Procesos Electorales</title>
@@ -58,6 +58,7 @@
   
       <section class="contenedor">
         <div class="row">
+          
           <div class="col-xs-12 col-md-3">
             <div class="menu-interna">
               <ul>
@@ -101,14 +102,14 @@
                     <div class="col-md-3">
                       <label class="control-label">Ámbito:</label>
                       <div id="ambito" class="form-group">
-                        <select name="cdgoAmbito" id="cdgoAmbito" class="form-control" onchange="redirectToPage(this.value);">
+                        <select name="cdgoAmbito" id="cdgoAmbito" class="form-control" onchange="buscarAmbito('', 'acta', '', this.value, ''); $('#aComentarioProvincia').html('');">
                           <option value="P">PERÚ</option>
                           <option value="E">EXTRANJERO</option>
                         </select>
                       </div>
                     </div>
                     
-                    <div id="dvNombreDepartamento" class="col-md-3">
+                    <div id="dvNombreDepartamento" class="col-md-3" style="">
                       <div class="form-group">
                         <label id="lblDepartamento" class="control-label">Departamento:</label>
                         <div id="departamentos">
@@ -144,11 +145,16 @@
                       </div>
                     </div>
                     
-                    <div id="dvNombreProvincia" class="col-md-3">
+                    <div id="dvNombreProvincia" class="col-md-3" style="">
                       <div class="form-group">
                         <label id="lblProvincia" class="control-label">Provincia:</label>
                         <div id="provincias">
-                          <select name="cdgoProv" id="cdgoProv" class="form-control" onchange="buscarProvincia_actas(this.value, '', 'PR');">
+                          <select name="cdgoProv" id="cdgoProv" class="form-control" onchange="buscarProvincia_actas(this.value, '', 'PR');
+                            if (this.value.substring(0,4) == '9430')
+                              $('#aComentarioProvincia').html('&nbsp;&nbsp;&nbsp;ACTUALMENTE SERBIA');
+                            else
+                              $('#aComentarioProvincia').html('');
+                            ">
                             <option selected="selected" value="">--SELECCIONE--</option>
                             <option value="010200">BAGUA</option>
                             <option value="010300">BONGARA</option>
@@ -158,6 +164,7 @@
                             <option value="010500">RODRIGUEZ DE MENDOZA</option>
                             <option value="010700">UTCUBAMBA</option>
                           </select>
+                          <span id="aComentarioProvincia"></span>
                         </div>
                       </div>
                     </div>
@@ -169,77 +176,133 @@
                     <div class="col-md-4">
                       <label id="lblDistrito" class="control-label">Distrito:</label>
                       <div id="distritos" class="form-group">
-                        <select name="cdgoDist" id="cdgoDist" class="form-control" onchange="getPageWeb('', 'actas', 'getLocalesVotacion', 'divLocal', '&amp;tipoElec=&amp;ubigeo=' + this.value);">
+                        <select name="cdgoDist" id="cdgoDist" class="form-control" onchange="
+                          getPageWeb('', 'actas', 'getLocalesVotacion', 'divLocal', '&amp;tipoElec=&amp;ubigeo=' + this.value);
+                          getPageWeb('', 'actas', 'limpiarDiv', 'divDetalle', '');">
                           <option selected="selected" value="">--SELECCIONE--</option>
-                          <option value="010101">CHACHAPOYAS</option>
-                          <option value="010102">ASUNCION</option>
-                          <option value="010103">BALSAS</option>
-                          <option value="010104">CHILETE</option>
-                          <option value="010105">CHURUBAMBA</option>
-                          <option value="010106">LA JALCA</option>
-                          <option value="010107">LA PECA</option>
-                          <option value="010108">LONGUITA</option>
-                          <option value="010109">MAGDALENA</option>
-                          <option value="010110">MOLINOPAMPA</option>
-                          <option value="010111">SAN NICOLAS</option>
-                          <option value="010112">SONCHE</option>
+                          <option value="010202">ARAMANGO</option>
+                          <option value="010205">BAGUA</option>
+                          <option value="010203">COPALLIN</option>
+                          <option value="010204">EL PARCO</option>
+                          <option value="010206">IMAZA</option>
+                          <option value="010201">LA PECA</option>
                         </select>
                       </div>
                     </div>
+                    
                     <div class="col-md-8">
                       <div class="form-group">
                         <label class="control-label">Locales:</label>
                         <div id="divLocal">    
-                          <select name="actas_ubigeo" id="actas_ubigeo" class="form-control" onchange="redirectToPage(this.value);">
-                          <option value="-1?-1" selected="selected">--SELECCIONE--</option>
-                            <option value="A">IE 16201</option>
-                            <option value="M">IE MIGUEL MONTEZA TAFUR</option>
+                          <select name="actas_ubigeo" id="actas_ubigeo" class="form-control" onchange="actas_porUbigeo_verActsPr(this.value, '10', '')">
+                            <option value="-1?-1" selected="selected">--SELECCIONE--</option>
+                            <option value="0033?010202">IE 16201</option>
+                            <option value="0032?010202">IE MIGUEL MONTEZA TAFUR</option>
                           </select>
                         </div>
                       </div>
                     </div>
-                    <div class="col-md-1">
+                    
+                    <div id="divDetalle" class="ptop20">
                       
+                      <div class="col-xs-12 pbot30">
+                        <p class="subtitle">LISTADO DE MESAS</p>
+                        <div id="page-wrap">
+                          <table class="table17" cellspacing="0">
+                            <tbody>
+                              <tr>
+                                <td bgcolor="#C1C1C1" id="ubigeo" name="ubigeo" onclick="verDetalleMesa('010202', '000169', '10', '1')" style="cursor:pointer"><a href="#">000169</a></td>
+                                <td bgcolor="#C1C1C1" id="ubigeo" name="ubigeo" onclick="verDetalleMesa('010202', '000170', '10', '1')" style="cursor:pointer"><a href="#">000170</a></td>	  
+                                <td bgcolor="#C1C1C1" id="ubigeo" name="ubigeo" onclick="verDetalleMesa('010202', '000171', '10', '1')" style="cursor:pointer"><a href="#">000171</a></td>	  
+                                <td bgcolor="#C1C1C1" id="ubigeo" name="ubigeo" onclick="verDetalleMesa('010202', '000172', '10', '1')" style="cursor:pointer"><a href="#">000172</a></td>	  
+                                <td bgcolor="#C1C1C1" id="ubigeo" name="ubigeo" onclick="verDetalleMesa('010202', '000173', '10', '1')" style="cursor:pointer"><a href="#">000173</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000174', '10', '1')" style="cursor:pointer"><a href="#">000174</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000175', '10', '1')" style="cursor:pointer"><a href="#">000175</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000176', '10', '1')" style="cursor:pointer"><a href="#">000176</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000177', '10', '1')" style="cursor:pointer"><a href="#">000177</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000178', '10', '1')" style="cursor:pointer"><a href="#">000178</a></td>
+                              </tr>
+                              <tr>
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000179', '10', '1')" style="cursor:pointer"><a href="#">000179</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000180', '10', '1')" style="cursor:pointer"><a href="#">000180</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000181', '10', '1')" style="cursor:pointer"><a href="#">000181</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000182', '10', '1')" style="cursor:pointer"><a href="#">000182</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000183', '10', '1')" style="cursor:pointer"><a href="#">000183</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000184', '10', '1')" style="cursor:pointer"><a href="#">000184</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000185', '10', '1')" style="cursor:pointer"><a href="#">000185</a></td>	  
+                                <td bgcolor="#C1C1C1" onclick="verDetalleMesa('010202', '000186', '10', '1')" style="cursor:pointer"><a href="#">000186</a></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div class="col-xs-12 cont-recto oculto-leyenda-color-fondo-mesas">
+                        <div class="col-md-4"><img src="images/procesacon.jpg"> Procesada con imagen</div>
+                        <div class="col-md-4"><img src="images/procesasin.jpg"> Procesada sin imagen</div>
+                        <div class="col-md-4"><img src="images/sinprocesa.jpg"> Sin procesar</div>
+                      </div>
+        
+                      <div class="row pbot30">
+                        <div class="col-lg-8 centered">
+                          <div class="col-xs-12 col-md-12 col-lg-12">
+                            <table>
+                              <tbody>
+                                <tr>
+                                  <td colspan="10">
+                                    <div class="conte-paginador">
+                                      <span class="paginador-txt">Total de mesas: 18</span>
+                                    </div>
+                                  </td>
+                                </tr>  
+                                <tr>
+                                  <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                  <td colspan="10">Página: 
+                                    <ul class="pagination">
+                                      <li class="active"><a class="paginador-n1">1</a></li>
+                                    </ul>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
-                  </div>
+
+                    
+                                
+                                    </div>
+                                  </div>
+                                </div>				
+                              
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                            
+                      </div>
                   
+                    </div>
+
+                  </div>
+       
                 </form>
               </div>
+       
             </div>
           </div>
+                    
         </div>
       </section>
     </div>
-  
-    
-    
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/fontawesome.min.js"></script>
-    <script src="js/validar.js"></script>
-    
-    <script>
-      function redirectToPage(value) {
-        if (value === 'A') {
-          window.location.href = "ubigeo.html"; // Cambia esto a la URL deseada para Perú
-        } else if (value === 'M') {
-          window.location.href = "ubigeo.html"; // Cambia esto a la URL deseada para Extranjero
-        }
-      }
+    <br/><br/>
 
-      function printContent(id) {
-        var content = document.getElementById(id).innerHTML;
-        var myWindow = window.open('', 'Print', 'width=600,height=400');
-        myWindow.document.write('<html><head><title>Print</title></head><body>');
-        myWindow.document.write(content);
-        myWindow.document.write('</body></html>');
-        myWindow.document.close();
-        myWindow.print();
-      }
-    </script>
-    
     <footer class="footer-inside">
-      <div class="container ">
+      <div class="container">
         <div class="row">
           <div class="col-md-12 direc01">
             <span>CONTÁCTENOS</span>
@@ -249,7 +312,7 @@
           </div>
         </div>
       </div>
-  </footer>
-    <script src="js/participacion.js"></script>
-</body>
+    </footer>
+      <script src="js/actas_ubigeo.js"></script>
+  </body>
 </html>
